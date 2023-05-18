@@ -1,0 +1,158 @@
+openapi: "3.0.0"
+info:
+  version: 0.1.0
+  title: Fridge Fresh API
+  description: An API for managing food items in a fridge to prevent them from going out of date.
+servers:
+  - url: https://api-fridge-fresh.zenottertech.com/v1
+
+paths:
+  /foodItems:
+    get:
+      summary: Retrieve all food items.
+      operationId: getFoodItems
+      parameters:
+        - name: limit
+          in: query
+          description: The maximum number of items to return.
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 50
+        - name: offset
+          in: query
+          description: The index of the first item to return.
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: A list of food items.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodItems'
+    post:
+      summary: Add a new food item.
+      operationId: createFoodItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FoodItem'
+      responses:
+        '201':
+          description: Successfully added a new food item.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodItem'
+
+  /foodItems/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve a specific food item.
+      operationId: getFoodItem
+      responses:
+        '200':
+          description: The requested food item.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodItem'
+    put:
+      summary: Update a specific food item.
+      operationId: updateFoodItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FoodItem'
+      responses:
+        '200':
+          description: Successfully updated the food item.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodItem'
+    delete:
+      summary: Delete a specific food item.
+      operationId: deleteFoodItem
+      responses:
+        '204':
+          description: Successfully deleted the food item.
+
+  /foodItems/expiring:
+    get:
+      summary: Retrieve food items due to go out of date.
+      operationId: getExpiringFoodItems
+      parameters:
+        - name: limit
+          in: query
+          description: The maximum number of items to return.
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 50
+        - name: offset
+          in: query
+          description: The index of the first item to return.
+          schema:
+            type: integer
+            default: 0
+        - name: daysUntilExpiry
+          in: query
+          description: The number of days until the food item expires. The value 0 will only show expired items
+          schema:
+            type: integer
+            default: 3
+            minimum: 0
+            maximum: 31
+      responses:
+        '200':
+          description: A list of expiring food items.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodItems'
+
+components:
+  schemas:
+    FoodItem:
+      type: object
+      required:
+        - name
+        - expiryDate
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the food item.
+        name:
+          type: string
+          description: The name of the food item.
+        barcode:
+          type: string
+          description: The barcode of the food item, if applicable.
+        expiryDate:
+          type: string
+          format: date
+          description: The expiry date of the food item.
+        quantity:
+          type: integer
+          description: The quantity of this item with the same expiry date
+          default: 1
+          minimum: 1
+    FoodItems:
+      type: array
+      items:
+        $ref: '#/components/schemas/FoodItem'
