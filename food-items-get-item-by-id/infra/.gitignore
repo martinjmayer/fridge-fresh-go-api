@@ -18,6 +18,3 @@ food-items-get-item-by-id
 # CDK asset staging directory
 .cdk.staging
 cdk.out
-
-# OS Specific
-.DS_Store
