@@ -9,8 +9,8 @@ servers:
 paths:
   /foodItems:
     get:
-      summary: Retrieve all food items.
-      operationId: getFoodItems
+      summary: Retrieve food items.
+      operationId: food-items-get-list-of-items
       parameters:
         - name: limit
           in: query
@@ -36,7 +36,7 @@ paths:
                 $ref: '#/components/schemas/FoodItems'
     post:
       summary: Add a new food item.
-      operationId: createFoodItem
+      operationId: food-items-create-item
       requestBody:
         required: true
         content:
@@ -60,7 +60,7 @@ paths:
           type: string
     get:
       summary: Retrieve a specific food item.
-      operationId: getFoodItem
+      operationId: food-items-get-item-by-id
       responses:
         '200':
           description: The requested food item.
@@ -70,7 +70,7 @@ paths:
                 $ref: '#/components/schemas/FoodItem'
     put:
       summary: Update a specific food item.
-      operationId: updateFoodItem
+      operationId: food-items-update-item
       requestBody:
         required: true
         content:
@@ -86,7 +86,7 @@ paths:
                 $ref: '#/components/schemas/FoodItem'
     delete:
       summary: Delete a specific food item.
-      operationId: deleteFoodItem
+      operationId: food-items-delete-item
       responses:
         '204':
           description: Successfully deleted the food item.
@@ -94,7 +94,7 @@ paths:
   /foodItems/expiring:
     get:
       summary: Retrieve food items due to go out of date.
-      operationId: getExpiringFoodItems
+      operationId: food-items-expiring-get-list-of-items
       parameters:
         - name: limit
           in: query
